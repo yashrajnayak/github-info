@@ -8,13 +8,22 @@ fetchButton.addEventListener('click', () => {
     resultsTable.innerHTML = ''; // Clear previous results
 
     usernames.forEach((username, index) => {
-        // Fetch user data
-        fetch(`https://api.github.com/users/${username}`)
+        // Fetch user data with authorization header
+        fetch(`https://api.github.com/users/${username}`, {
+            headers: {
+                Authorization: `token ${import.meta.env.GH_TOKEN}` 
+            }
+        })
             .then(response => response.json())
             .then(userData => {
                 // Introduce a delay before fetching repository data
                 setTimeout(() => {
-                    fetch(`https://api.github.com/users/${username}/repos`)
+                    // Fetch repository data with authorization header
+                    fetch(`https://api.github.com/users/${username}/repos`, {
+                        headers: {
+                            Authorization: `token ${import.meta.env.GH_TOKEN}` 
+                        }
+                    })
                         .then(response => response.json())
                         .then(reposData => {
                             let totalStars = 0;
