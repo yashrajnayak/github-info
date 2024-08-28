@@ -106,6 +106,7 @@ fetchButton.addEventListener('click', () => {
                             const row = resultsTable.insertRow();
                             row.innerHTML = `
                                 <td>${username}</td>
+                                <td>${userData.name || 'N/A'}</td>
                                 <td>${totalStars}</td>
                                 <td>${totalForks}</td>
                                 <td>${reposData.length}</td>
@@ -113,18 +114,19 @@ fetchButton.addEventListener('click', () => {
                                 <td>${userData.company || 'N/A'}</td>
                                 <td>${orgNames || 'N/A'}</td>
                             `;
+
+                            completedRequests++;
+                            updateProgress(completedRequests, totalRequests);
+
+                            if (completedRequests === totalRequests) {
+                                copyTableButton.style.display = 'block';
+                            }
                         })
                         .catch(error => {
                             console.error('Error fetching data:', error);
                             // Handle fetch errors
                         });
                 }, index * 1000);
-                completedRequests++;
-                updateProgress(completedRequests, totalRequests);
-
-                if (completedRequests === totalRequests) {
-                    copyTableButton.style.display = 'block'; // Show copy button when all requests are complete
-                }
             })
             .catch(error => {
                 console.error('Error fetching user data:', error);
@@ -132,7 +134,7 @@ fetchButton.addEventListener('click', () => {
                 updateProgress(completedRequests, totalRequests);
 
                 if (completedRequests === totalRequests) {
-                    copyTableButton.style.display = 'block'; // Show copy button even if there are errors
+                    copyTableButton.style.display = 'block';
                 }
             });
     });
