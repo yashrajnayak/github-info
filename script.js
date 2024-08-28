@@ -46,10 +46,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const rows = table.querySelectorAll('tr');
         let copyText = '';
 
-        rows.forEach(row => {
+        rows.forEach((row, index) => {
             const cells = row.querySelectorAll('th, td');
             const rowData = Array.from(cells).map(cell => cell.textContent.trim());
             copyText += rowData.join('\t') + '\n';
+
+            // Add a separator line after the header row
+            if (index === 0) {
+                copyText += rowData.map(() => '-'.repeat(10)).join('\t') + '\n';
+            }
         });
 
         navigator.clipboard.writeText(copyText).then(() => {
