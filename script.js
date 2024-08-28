@@ -3,6 +3,31 @@ const usernamesTextarea = document.getElementById('usernames');
 const fetchButton = document.getElementById('fetchButton');
 const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
 
+const copyTableButton = document.getElementById('copyTableButton');
+
+// Function to copy table content
+function copyTableContent() {
+    const table = document.getElementById('resultsTable');
+    const rows = table.querySelectorAll('tr');
+    let copyText = '';
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('th, td');
+        const rowData = Array.from(cells).map(cell => cell.textContent.trim());
+        copyText += rowData.join('\t') + '\n';
+    });
+
+    navigator.clipboard.writeText(copyText).then(() => {
+        alert('Table copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy table: ', err);
+        alert('Failed to copy table. Please try again.');
+    });
+}
+
+// Add event listener to copy button
+copyTableButton.addEventListener('click', copyTableContent);
+
 fetchButton.addEventListener('click', () => {
     const accessToken = accessTokenInput.value.trim();
     let usernames = usernamesTextarea.value.trim();
@@ -33,6 +58,9 @@ fetchButton.addEventListener('click', () => {
         <th>Company</th>
         <th>Organizations</th>
     `;
+
+    // Show the copy button when data is fetched
+    copyTableButton.style.display = 'block';
 
     usernames.forEach((username, index) => {
         fetch(`https://api.github.com/users/${username}`, {
