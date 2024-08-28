@@ -11,39 +11,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const failedUsernamesContainer = document.getElementById('failedUsernames');
     const failedUsernamesList = document.getElementById('failedUsernamesList');
 
-    // Check if all necessary elements exist
-    if (!accessTokenInput || !usernamesTextarea || !fetchButton || !resultsTable || 
-        !progressContainer || !fetchProgress || !progressText || 
-        !failedUsernamesContainer || !failedUsernamesList) {
-        console.error('One or more required DOM elements are missing');
-    }
-
-    // Function to format and clean up usernames
+    /**
+     * Formats and cleans up a GitHub username
+     * @param {string} input - The input username
+     * @return {string} The formatted username
+     */
     function formatUsername(input) {
-        // Remove leading/trailing whitespace
         input = input.trim();
-
-        // Remove 'https://github.com/' or 'github.com/' if present
+        // Remove GitHub URL if present
         input = input.replace(/^(https?:\/\/)?(www\.)?github\.com\//, '');
-
-        // Remove any trailing slash
+        // Remove trailing slash
         input = input.replace(/\/$/, '');
-
-        // Remove any email addresses
+        // Return empty string if it's an email address
         if (input.includes('@')) {
             return '';
         }
-
         // Remove any non-alphanumeric characters except dash and underscore
         input = input.replace(/[^a-zA-Z0-9-_]/g, '');
-
         return input;
     }
 
-    // Function to copy table content
+    /**
+     * Copies the table content to clipboard
+     */
     function copyTableContent() {
-        const table = document.getElementById('resultsTable');
-        const rows = table.querySelectorAll('tr');
+        const rows = resultsTable.querySelectorAll('tr');
         let copyText = '';
 
         rows.forEach((row, index) => {
@@ -70,31 +62,28 @@ document.addEventListener('DOMContentLoaded', function() {
         copyTableButton.addEventListener('click', copyTableContent);
     }
 
-    // Main fetch function
+    /**
+     * Fetches GitHub data for the provided usernames
+     */
     async function fetchGitHubData() {
         const accessToken = accessTokenInput.value.trim();
-        let usernames = usernamesTextarea.value.trim();
-
-        // Split usernames by commas, newlines, or spaces
-        usernames = usernames.split(/[,\n\s]+/);
-
-        // Format and filter usernames
+        let usernames = usernamesTextarea.value.trim().split(/[,\n\s]+/);
         usernames = usernames.map(formatUsername).filter(username => username !== '');
-
-        // Update textarea with formatted usernames
         usernamesTextarea.value = usernames.join('\n');
 
-        if (resultsTable) {
-            resultsTable.innerHTML = ''; // Clear previous results
+        // Clear previous results and reset UI
+        const tableBody = resultsTable.querySelector('tbody');
+        if (tableBody) {
+            tableBody.innerHTML = ''; // Clear only the table body
         }
         if (copyTableButton) {
-            copyTableButton.style.display = 'none'; // Hide copy button initially
+            copyTableButton.style.display = 'none';
         }
         if (failedUsernamesContainer) {
-            failedUsernamesContainer.style.display = 'none'; // Hide failed usernames container
+            failedUsernamesContainer.style.display = 'none';
         }
         if (failedUsernamesList) {
-            failedUsernamesList.innerHTML = ''; // Clear previous failed usernames
+            failedUsernamesList.innerHTML = '';
         }
 
         if (!accessToken) {
@@ -102,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Show progress indicator
         if (progressContainer) {
             progressContainer.style.display = 'block';
         }
@@ -118,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (const username of usernames) {
             try {
+                // Fetch user data
                 const userData = await fetch(`https://api.github.com/users/${username}`, {
                     headers: { Authorization: `token ${accessToken}` }
                 }).then(response => {
@@ -127,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return response.json();
                 });
 
+                // Fetch repos and orgs data
                 const [reposData, orgsData] = await Promise.all([
                     fetch(`https://api.github.com/users/${username}/repos`, {
                         headers: { Authorization: `token ${accessToken}` }
@@ -136,11 +128,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     }).then(response => response.json())
                 ]);
 
+                // Calculate total stars and forks
                 const totalStars = reposData.reduce((sum, repo) => sum + repo.stargazers_count, 0);
                 const totalForks = reposData.reduce((sum, repo) => sum + repo.forks_count, 0);
                 const orgNames = orgsData.map(org => org.login).join(', ');
 
-                const row = resultsTable.insertRow();
+                // Add row to the table
+                const row = tableBody.insertRow(); // Insert row into table body
                 row.innerHTML = `
                     <td>${username}</td>
                     <td>${userData.name || 'N/A'}</td>
@@ -163,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
+        // Show copy button and hide progress indicator
         if (copyTableButton) {
             copyTableButton.style.display = 'block';
         }
@@ -170,13 +165,13 @@ document.addEventListener('DOMContentLoaded', function() {
             progressContainer.style.display = 'none';
         }
 
-        // Display failed usernames
+        // Display failed usernames if any
         if (failedUsernames.length > 0) {
             if (failedUsernamesContainer) {
                 failedUsernamesContainer.style.display = 'block';
             }
             if (failedUsernamesList) {
-                failedUsernamesList.innerHTML = ''; // Clear previous entries
+                failedUsernamesList.innerHTML = '';
                 failedUsernames.forEach(username => {
                     const li = document.createElement('li');
                     li.textContent = username;
@@ -190,7 +185,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Progress update function
+    /**
+     * Updates the progress bar and text
+     * @param {number} completed - Number of completed requests
+     * @param {number} total - Total number of requests
+     */
     function updateProgress(completed, total) {
         const percentage = Math.round((completed / total) * 100);
         if (fetchProgress) {
@@ -201,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Add event listener to fetch button
+    // Add event listener to fetch button if it exists
     if (fetchButton) {
         fetchButton.addEventListener('click', fetchGitHubData);
     }
