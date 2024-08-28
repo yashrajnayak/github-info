@@ -1,9 +1,30 @@
 const accessTokenInput = document.getElementById('accessToken');
 const usernamesTextarea = document.getElementById('usernames');
 const fetchButton = document.getElementById('fetchButton');
+const copyTableButton = document.getElementById('copyTableButton');
 const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
 
-const copyTableButton = document.getElementById('copyTableButton');
+// Function to format and clean up usernames
+function formatUsername(input) {
+    // Remove leading/trailing whitespace
+    input = input.trim();
+
+    // Remove 'https://github.com/' or 'github.com/' if present
+    input = input.replace(/^(https?:\/\/)?(www\.)?github\.com\//, '');
+
+    // Remove any trailing slash
+    input = input.replace(/\/$/, '');
+
+    // Remove any email addresses
+    if (input.includes('@')) {
+        return '';
+    }
+
+    // Remove any non-alphanumeric characters except dash and underscore
+    input = input.replace(/[^a-zA-Z0-9-_]/g, '');
+
+    return input;
+}
 
 // Function to copy table content
 function copyTableContent() {
@@ -32,35 +53,25 @@ fetchButton.addEventListener('click', () => {
     const accessToken = accessTokenInput.value.trim();
     let usernames = usernamesTextarea.value.trim();
 
-    // Check if usernames are comma-separated, if not, make them comma-separated
-    if (!usernames.includes(',')) {
-        usernames = usernames.split(/\s+/).join(',');
-        usernamesTextarea.value = usernames; // Update textarea with comma-separated values
-    }
+    // Split usernames by commas, newlines, or spaces
+    usernames = usernames.split(/[,\n\s]+/);
 
-    usernames = usernames.split(',').map(username => username.trim());
+    // Format and filter usernames
+    usernames = usernames.map(formatUsername).filter(username => username !== '');
+
+    // Update textarea with formatted usernames
+    usernamesTextarea.value = usernames.join('\n');
 
     resultsTable.innerHTML = ''; // Clear previous results
+    copyTableButton.style.display = 'none'; // Hide copy button initially
 
     if (!accessToken) {
         alert('Please enter a GitHub Personal Access Token');
         return;
     }
 
-    // Update table header to include new columns
-    const thead = document.querySelector('#resultsTable thead tr');
-    thead.innerHTML = `
-        <th>Username</th>
-        <th>Stars</th>
-        <th>Forks</th>
-        <th>Repositories</th>
-        <th>Followers</th>
-        <th>Company</th>
-        <th>Organizations</th>
-    `;
-
-    // Show the copy button when data is fetched
-    copyTableButton.style.display = 'block';
+    let completedRequests = 0;
+    const totalRequests = usernames.length;
 
     usernames.forEach((username, index) => {
         fetch(`https://api.github.com/users/${username}`, {
@@ -101,10 +112,17 @@ fetchButton.addEventListener('click', () => {
                             // Handle fetch errors
                         });
                 }, index * 1000);
+                completedRequests++;
+                if (completedRequests === totalRequests) {
+                    copyTableButton.style.display = 'block'; // Show copy button when all requests are complete
+                }
             })
             .catch(error => {
                 console.error('Error fetching user data:', error);
-                // Handle user fetch errors
+                completedRequests++;
+                if (completedRequests === totalRequests) {
+                    copyTableButton.style.display = 'block'; // Show copy button even if there are errors
+                }
             });
     });
 });
