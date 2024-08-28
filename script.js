@@ -22,10 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
         input = input.replace(/^(https?:\/\/)?(www\.)?github\.com\//, '');
         // Remove trailing slash
         input = input.replace(/\/$/, '');
-        // Return empty string if it's an email address
-        if (input.includes('@')) {
-            return '';
-        }
+        // Remove @ sign if present
+        input = input.replace('@', '');
         // Remove any non-alphanumeric characters except dash and underscore
         input = input.replace(/[^a-zA-Z0-9-_]/g, '');
         return input;
@@ -42,11 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const cells = row.querySelectorAll('th, td');
             const rowData = Array.from(cells).map(cell => cell.textContent.trim());
             copyText += rowData.join('\t') + '\n';
-
-            // Add a separator line after the header row
-            if (index === 0) {
-                copyText += rowData.map(() => '-'.repeat(10)).join('\t') + '\n';
-            }
         });
 
         navigator.clipboard.writeText(copyText).then(() => {
