@@ -80,64 +80,67 @@ fetchButton.addEventListener('click', () => {
     let completedRequests = 0;
     const totalRequests = usernames.length;
 
-    usernames.forEach((username, index) => {
-        fetch(`https://api.github.com/users/${username}`, {
-            headers: { Authorization: `token ${accessToken}` }
+    const fetchPromises = usernames.map((username, index) => 
+        new Promise((resolve, reject) => {
+            setTimeout(() => {
+                fetch(`https://api.github.com/users/${username}`, {
+                    headers: { Authorization: `token ${accessToken}` }
+                })
+                    .then(response => response.json())
+                    .then(userData => {
+                        return Promise.all([
+                            fetch(`https://api.github.com/users/${username}/repos`, {
+                                headers: { Authorization: `token ${accessToken}` }
+                            }),
+                            fetch(`https://api.github.com/users/${username}/orgs`, {
+                                headers: { Authorization: `token ${accessToken}` }
+                            })
+                        ])
+                            .then(([reposResponse, orgsResponse]) => 
+                                Promise.all([reposResponse.json(), orgsResponse.json()])
+                            )
+                            .then(([reposData, orgsData]) => {
+                                const totalStars = reposData.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+                                const totalForks = reposData.reduce((sum, repo) => sum + repo.forks_count, 0);
+                                const orgNames = orgsData.map(org => org.login).join(', ');
+
+                                const row = resultsTable.insertRow();
+                                row.innerHTML = `
+                                    <td>${username}</td>
+                                    <td>${userData.name || 'N/A'}</td>
+                                    <td>${totalStars}</td>
+                                    <td>${totalForks}</td>
+                                    <td>${reposData.length}</td>
+                                    <td>${userData.followers}</td>
+                                    <td>${userData.company || 'N/A'}</td>
+                                    <td>${orgNames || 'N/A'}</td>
+                                `;
+
+                                completedRequests++;
+                                updateProgress(completedRequests, totalRequests);
+                                resolve();
+                            });
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching data for ${username}:`, error);
+                        completedRequests++;
+                        updateProgress(completedRequests, totalRequests);
+                        reject(error);
+                    });
+            }, index * 1000);
         })
-            .then(response => response.json())
-            .then(userData => {
-                setTimeout(() => {
-                    Promise.all([
-                        fetch(`https://api.github.com/users/${username}/repos`, {
-                            headers: { Authorization: `token ${accessToken}` }
-                        }),
-                        fetch(`https://api.github.com/users/${username}/orgs`, {
-                            headers: { Authorization: `token ${accessToken}` }
-                        })
-                    ])
-                        .then(([reposResponse, orgsResponse]) => 
-                            Promise.all([reposResponse.json(), orgsResponse.json()])
-                        )
-                        .then(([reposData, orgsData]) => {
-                            const totalStars = reposData.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-                            const totalForks = reposData.reduce((sum, repo) => sum + repo.forks_count, 0);
-                            const orgNames = orgsData.map(org => org.login).join(', ');
+    );
 
-                            const row = resultsTable.insertRow();
-                            row.innerHTML = `
-                                <td>${username}</td>
-                                <td>${userData.name || 'N/A'}</td>
-                                <td>${totalStars}</td>
-                                <td>${totalForks}</td>
-                                <td>${reposData.length}</td>
-                                <td>${userData.followers}</td>
-                                <td>${userData.company || 'N/A'}</td>
-                                <td>${orgNames || 'N/A'}</td>
-                            `;
-
-                            completedRequests++;
-                            updateProgress(completedRequests, totalRequests);
-
-                            if (completedRequests === totalRequests) {
-                                copyTableButton.style.display = 'block';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching data:', error);
-                            // Handle fetch errors
-                        });
-                }, index * 1000);
-            })
-            .catch(error => {
-                console.error('Error fetching user data:', error);
-                completedRequests++;
-                updateProgress(completedRequests, totalRequests);
-
-                if (completedRequests === totalRequests) {
-                    copyTableButton.style.display = 'block';
-                }
-            });
-    });
+    Promise.all(fetchPromises)
+        .then(() => {
+            copyTableButton.style.display = 'block';
+            progressContainer.style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error fetching all data:', error);
+            copyTableButton.style.display = 'block';
+            progressContainer.style.display = 'none';
+        });
 });
 
 function updateProgress(completed, total) {
