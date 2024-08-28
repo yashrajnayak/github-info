@@ -4,6 +4,8 @@
 
 GitHub Information Fetcher is a web-based tool that allows users to retrieve and display information about GitHub users. By entering GitHub usernames and a personal access token, users can fetch details such as total stars, forks, repositories, followers, company, and organizations for multiple GitHub accounts simultaneously.
 
+![GitHub Information Fetcher V1](https://github.com/user-attachments/assets/3937423f-9f29-4005-99b3-338821bda8b4)
+
 ## Features
 
 - Fetch information for multiple GitHub users at once
