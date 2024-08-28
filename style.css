@@ -111,3 +111,12 @@ tr:hover {
     }
 }
 
+#copyTableButton {
+    margin-top: 20px;
+    background-color: #27ae60;
+}
+
+#copyTableButton:hover {
+    background-color: #2ecc71;
+}
+
