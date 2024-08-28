@@ -6,6 +6,8 @@ const resultsTable = document.getElementById('resultsTable').getElementsByTagNam
 const progressContainer = document.getElementById('progressContainer');
 const fetchProgress = document.getElementById('fetchProgress');
 const progressText = document.getElementById('progressText');
+const failedUsernamesContainer = document.getElementById('failedUsernames');
+const failedUsernamesList = document.getElementById('failedUsernamesList');
 
 // Function to format and clean up usernames
 function formatUsername(input) {
@@ -67,6 +69,8 @@ fetchButton.addEventListener('click', async () => {
 
     resultsTable.innerHTML = ''; // Clear previous results
     copyTableButton.style.display = 'none'; // Hide copy button initially
+    failedUsernamesContainer.style.display = 'none'; // Hide failed usernames container
+    failedUsernamesList.innerHTML = ''; // Clear previous failed usernames
 
     if (!accessToken) {
         alert('Please enter a GitHub Personal Access Token');
@@ -79,12 +83,18 @@ fetchButton.addEventListener('click', async () => {
 
     let completedRequests = 0;
     const totalRequests = usernames.length;
+    const failedUsernames = [];
 
     for (const username of usernames) {
         try {
             const userData = await fetch(`https://api.github.com/users/${username}`, {
                 headers: { Authorization: `token ${accessToken}` }
-            }).then(response => response.json());
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            });
 
             const [reposData, orgsData] = await Promise.all([
                 fetch(`https://api.github.com/users/${username}/repos`, {
@@ -112,11 +122,7 @@ fetchButton.addEventListener('click', async () => {
             `;
         } catch (error) {
             console.error(`Error fetching data for ${username}:`, error);
-            const row = resultsTable.insertRow();
-            row.innerHTML = `
-                <td>${username}</td>
-                <td colspan="7">Error fetching data</td>
-            `;
+            failedUsernames.push(username);
         } finally {
             completedRequests++;
             updateProgress(completedRequests, totalRequests);
@@ -128,6 +134,15 @@ fetchButton.addEventListener('click', async () => {
 
     copyTableButton.style.display = 'block';
     progressContainer.style.display = 'none';
+
+    if (failedUsernames.length > 0) {
+        failedUsernamesContainer.style.display = 'block';
+        failedUsernames.forEach(username => {
+            const li = document.createElement('li');
+            li.textContent = username;
+            failedUsernamesList.appendChild(li);
+        });
+    }
 });
 
 function updateProgress(completed, total) {
