@@ -3,6 +3,9 @@ const usernamesTextarea = document.getElementById('usernames');
 const fetchButton = document.getElementById('fetchButton');
 const copyTableButton = document.getElementById('copyTableButton');
 const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+const progressContainer = document.getElementById('progressContainer');
+const fetchProgress = document.getElementById('fetchProgress');
+const progressText = document.getElementById('progressText');
 
 // Function to format and clean up usernames
 function formatUsername(input) {
@@ -70,6 +73,10 @@ fetchButton.addEventListener('click', () => {
         return;
     }
 
+    progressContainer.style.display = 'block';
+    fetchProgress.value = 0;
+    progressText.textContent = '0%';
+
     let completedRequests = 0;
     const totalRequests = usernames.length;
 
@@ -113,6 +120,8 @@ fetchButton.addEventListener('click', () => {
                         });
                 }, index * 1000);
                 completedRequests++;
+                updateProgress(completedRequests, totalRequests);
+
                 if (completedRequests === totalRequests) {
                     copyTableButton.style.display = 'block'; // Show copy button when all requests are complete
                 }
@@ -120,9 +129,17 @@ fetchButton.addEventListener('click', () => {
             .catch(error => {
                 console.error('Error fetching user data:', error);
                 completedRequests++;
+                updateProgress(completedRequests, totalRequests);
+
                 if (completedRequests === totalRequests) {
                     copyTableButton.style.display = 'block'; // Show copy button even if there are errors
                 }
             });
     });
 });
+
+function updateProgress(completed, total) {
+    const percentage = Math.round((completed / total) * 100);
+    fetchProgress.value = percentage;
+    progressText.textContent = `${percentage}%`;
+}
