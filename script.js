@@ -165,13 +165,23 @@ document.addEventListener('DOMContentLoaded', function() {
             progressContainer.style.display = 'none';
         }
 
-        if (failedUsernames.length > 0 && failedUsernamesContainer && failedUsernamesList) {
-            failedUsernamesContainer.style.display = 'block';
-            failedUsernames.forEach(username => {
-                const li = document.createElement('li');
-                li.textContent = username;
-                failedUsernamesList.appendChild(li);
-            });
+        // Display failed usernames
+        if (failedUsernames.length > 0) {
+            if (failedUsernamesContainer) {
+                failedUsernamesContainer.style.display = 'block';
+            }
+            if (failedUsernamesList) {
+                failedUsernamesList.innerHTML = ''; // Clear previous entries
+                failedUsernames.forEach(username => {
+                    const li = document.createElement('li');
+                    li.textContent = username;
+                    failedUsernamesList.appendChild(li);
+                });
+            }
+        } else {
+            if (failedUsernamesContainer) {
+                failedUsernamesContainer.style.display = 'none';
+            }
         }
     }
 
