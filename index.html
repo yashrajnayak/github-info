@@ -8,7 +8,8 @@
 <body>
     <div class="container"> 
         <h1>GitHub Information</h1>
-        <textarea id="usernames" placeholder="Enter comma-separated GitHub usernames"></textarea>
+        <input type="password" id="accessToken" placeholder="Enter GitHub Personal Access Token">
+        <textarea id="usernames" placeholder="Enter GitHub usernames (comma-separated or one per line)"></textarea>
         <button id="fetchButton">Fetch Information</button>
         <table id="resultsTable">
             <thead>
@@ -18,6 +19,8 @@
                     <th>Forks</th> 
                     <th>Repositories</th>
                     <th>Followers</th>
+                    <th>Company</th>
+                    <th>Organizations</th>
                 </tr>
             </thead>
             <tbody>
