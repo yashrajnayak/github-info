@@ -3,32 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Information</title>
+    <title>GitHub Information Fetcher</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>GitHub Information</h1>
+        <h1>GitHub Information Fetcher</h1>
         <input type="password" id="accessToken" placeholder="Enter GitHub Personal Access Token">
         <textarea id="usernames" placeholder="Enter GitHub usernames (comma-separated or one per line)"></textarea>
         <button id="fetchButton">Fetch Information</button>
+        <div id="progressContainer" style="display: none;">
+            <progress id="fetchProgress" value="0" max="100"></progress>
+            <span id="progressText">0%</span>
+        </div>
+        <div class="table-container">
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Stars</th>
+                        <th>Forks</th>
+                        <th>Repositories</th>
+                        <th>Followers</th>
+                        <th>Company</th>
+                        <th>Organizations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
         <button id="copyTableButton" style="display: none;">Copy Table</button>
-        <table id="resultsTable">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Name</th>
-                    <th>Stars</th>
-                    <th>Forks</th>
-                    <th>Repositories</th>
-                    <th>Followers</th>
-                    <th>Company</th>
-                    <th>Organizations</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
         <footer>
             <p>Created by <a href="https://github.com/yashrajnayak">Yashraj Nayak</a> | 
             <a href="https://github.com/yashrajnayak/github-info">Contribute to this project</a></p>
