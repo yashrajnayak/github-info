@@ -14,29 +14,13 @@ GitHub Information Fetcher is a web-based tool that allows users to retrieve and
 - Support for comma-separated or line-by-line username input
 - Modern and responsive design
 
-## Getting Started
-
-1. Clone this repository to your local machine.
-2. Open `index.html` in your web browser.
-3. Enter your GitHub Personal Access Token.
-4. Input GitHub usernames (comma-separated or one per line).
-5. Click "Fetch Information" to retrieve and display the data.
-
 ## Prerequisites
 
-- A modern web browser
 - A GitHub Personal Access Token with appropriate permissions
-
-## Usage
-
-1. Enter your GitHub Personal Access Token in the designated input field.
-2. Input the GitHub usernames you want to fetch information for. You can separate them with commas or enter one username per line.
-3. Click the "Fetch Information" button.
-4. View the retrieved information in the table below.
 
 ## Contributing
 
-I welcome contributions to the GitHub Information Fetcher project! Here's how you can help:
+Contributions are welcome to this project! Here's how you can help:
 
 1. **Fork the Repository**: Create your own fork of the project.
 
