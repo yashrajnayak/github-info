@@ -2,16 +2,27 @@
 
 ## Overview
 
-GitHub Info is a web-based tool that allows users to retrieve and display information about GitHub users. By entering GitHub usernames and a personal access token, users can fetch details such as total stars, forks, repositories, followers, company, and organizations for multiple GitHub accounts simultaneously.
+This app fetches and displays information publicly available on GitHub users' profiles using the Public GitHub API. By entering GitHub usernames and a personal access token, users can fetch details such as total stars, forks, repositories, followers, company, and organizations for multiple GitHub users simultaneously.
 
-![image](https://github.com/user-attachments/assets/d888da9d-ebf7-4211-a9fa-2c5d601f8a49)
+## Screenshots
+
+On app load:
+
+![image](https://github.com/user-attachments/assets/0c04c834-5948-40f8-84f7-6450db793bca)
+
+Dark mode:
+
+![image](https://github.com/user-attachments/assets/147472a3-7a32-42f8-badc-97afb7d703ba)
+
+Information display:
+
+![image](https://github.com/user-attachments/assets/b28c1d5b-f62c-4fc1-a842-eb0a25792b7d)
 
 
 ## Features
 
-- Fetch information for multiple GitHub users at once
+- Fetch publicly available information for multiple GitHub users at once
 - Display user data in a clean, responsive table format
-- Secure input for GitHub Personal Access Token
 - Support for comma-separated or line-by-line username input
 - Modern and responsive design
 
