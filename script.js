@@ -95,6 +95,33 @@ document.addEventListener('DOMContentLoaded', function() {
         usernames = usernames.map(formatUsername).filter(username => username !== '');
         usernamesTextarea.value = usernames.join('\n');
 
+        // Check if access token is provided
+        if (!accessToken) {
+            alert('Please enter a GitHub Personal Access Token');
+            return;
+        }
+
+        // Check if at least one username is provided
+        if (usernames.length === 0) {
+            alert('Please enter at least one GitHub username');
+            return;
+        }
+
+        // Validate GitHub token
+        try {
+            const response = await fetch('https://api.github.com/user', {
+                headers: {
+                    'Authorization': `token ${accessToken}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Invalid token');
+            }
+        } catch (error) {
+            alert('Invalid GitHub token. Please check and try again.');
+            return;
+        }
+
         // Clear previous results and reset UI
         const tableBody = resultsTable.querySelector('tbody');
         if (tableBody) {
