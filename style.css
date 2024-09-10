@@ -1,32 +1,77 @@
+:root {
+    --bg-color: #f4f4f4;
+    --text-color: #333;
+    --header-color: #2c3e50;
+    --button-bg: #3498db;
+    --button-hover-bg: #2980b9;
+    --table-bg: white;
+    --table-header-bg: #f2f2f2;
+    --table-border: #ddd;
+    --table-hover: #f5f5f5;
+    --app-description-bg: #e8f4f8;
+    --link-color: #3498db;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a2634;
+    --text-color: #ecf0f1;
+    --header-color: #61dafb;
+    --button-bg: #3498db;
+    --button-hover-bg: #2980b9;
+    --table-bg: #2c3e50;
+    --table-header-bg: #34495e;
+    --table-border: #4a6785;
+    --table-hover: #3a546e;
+    --app-description-bg: #2c3e50;
+    --link-color: #61dafb;
+    --input-bg: #34495e;
+    --input-text: #ecf0f1;
+    --input-border: #4a6785;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
+    color: var(--text-color);
+    background-color: var(--bg-color);
     margin: 0;
     padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1200px; 
     margin: 0 auto;
     padding: 20px;
 }
 
 h1 {
     text-align: center;
-    color: #2c3e50;
+    color: var(--header-color);
     margin-bottom: 30px;
 }
 
-input[type="password"], textarea {
+input[type="text"],
+input[type="password"],
+textarea,
+button,
+.table-container {
     width: 100%;
-    padding: 12px;
+    box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+    padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    box-sizing: border-box;
     font-size: 16px;
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--input-border);
 }
 
 textarea {
@@ -35,20 +80,19 @@ textarea {
 }
 
 button {
-    display: block;
-    width: 100%;
     padding: 12px;
-    background-color: #3498db;
+    background-color: var(--button-bg);
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: var(--button-hover-bg);
 }
 
 #progressContainer {
@@ -69,6 +113,7 @@ button:hover {
 
 .table-container {
     max-height: 500px;
+    overflow-x: auto;
     overflow-y: auto;
     margin-top: 30px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -77,41 +122,31 @@ button:hover {
 table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
+    background-color: var(--table-bg);
 }
 
 thead {
-    position: sticky;
-    top: 0;
-    background-color: #f2f2f2;
-    z-index: 1; /* Ensure the header stays on top */
+    background-color: var(--table-header-bg);
 }
 
 th, td {
-    border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
-}
-
-th {
-    font-weight: bold;
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    border-bottom: 1px solid var(--table-border);
 }
 
 tbody tr:hover {
-    background-color: #f5f5f5;
+    background-color: var(--table-hover);
 }
 
 #copyTableButton {
     margin-top: 20px;
-    background-color: #27ae60;
+    background-color: #27ae60; /* Default green color */
+    transition: background-color 0.3s ease;
 }
 
 #copyTableButton:hover {
-    background-color: #2ecc71;
+    background-color: #219a52; /* Darker green on hover */
 }
 
 footer {
@@ -122,7 +157,7 @@ footer {
 }
 
 footer a {
-    color: #3498db;
+    color: var(--link-color);
     text-decoration: none;
 }
 
@@ -168,5 +203,244 @@ footer a:hover {
     .table-container {
         max-height: 300px;
     }
+}
+
+.app-description {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: var(--app-description-bg);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.app-description p {
+    color: var(--text-color);
+    margin: 0;
+}
+
+.app-description em {
+    font-style: italic;
+    color: #2980b9;
+}
+
+/* Placeholder text styling */
+::placeholder {
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #999;
+}
+
+:-ms-input-placeholder {
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #999;
+}
+
+::-ms-input-placeholder {
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #999;
+}
+
+
+@media screen and (min-width: 1240px) { 
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    button,
+    .table-container {
+        width: 1200px; 
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+.theme-switch-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+
+#themeLabel {
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+
+.toggle-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+    margin-bottom: 5px;
+}
+
+.toggle-switch input {
+    display: none;
+}
+
+.toggle-slider {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    background-color: #ccc;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: .4s;
+    margin-right: 10px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--button-bg);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-switch span:last-child {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+
+#columnToggles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--app-description-bg);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+    flex: 0 1 auto;
+}
+
+.toggle-switch input {
+    display: none;
+}
+
+.toggle-slider {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    background-color: #ccc;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: .4s;
+    margin-right: 10px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--button-bg);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(18px);
+}
+
+.toggle-switch span:last-child {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+
+@media screen and (max-width: 768px) {
+    #columnToggles {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .toggle-switch {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #a0a0a0;
+}
+
+
+@media screen and (max-width: 768px) {
+    #columnToggles {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+#resetButton {
+    display: none;
+    margin-top: 20px;
+    margin-left: 10px; 
+    background-color: #bd6157; 
+    transition: background-color 0.3s ease;
+}
+
+#resetButton:hover {
+    background-color: #c0392b;
+}
+
+
+#copyTableButton {
+    margin-top: 20px;
+    background-color: #27ae60; 
+    transition: background-color 0.3s ease;
+}
+
+#copyTableButton:hover {
+    background-color: #219a52; 
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.button-container button {
+    margin: 0 5px; 
 }
 

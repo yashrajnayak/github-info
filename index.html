@@ -1,14 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Info</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="theme-switch-wrapper">
+        <span id="themeLabel">Light</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="toggle-slider"></span>
+        </label>
+    </div>
     <div class="container">
         <h1>GitHub Info</h1>
+        <div class="app-description">
+            <p>This app fetches and displays information publicly available on GitHub users' profiles using the Public GitHub API.</p>
+        </div>
         <input type="password" id="accessToken" placeholder="Enter GitHub Personal Access Token">
         <textarea id="usernames" placeholder="Enter GitHub usernames (comma-separated or one per line)"></textarea>
         <button id="fetchButton">Fetch</button>
@@ -22,12 +33,13 @@
                     <tr>
                         <th>Username</th>
                         <th>Name</th>
-                        <th>Stars</th>
-                        <th>Forks</th>
-                        <th>Repositories</th>
-                        <th>Followers</th>
-                        <th>Company</th>
-                        <th>Organizations</th>
+                        <th class="toggleable" style="display: none;">Bio</th>
+                        <th class="toggleable">Repositories</th>
+                        <th class="toggleable">Stars</th>
+                        <th class="toggleable">Forks</th>
+                        <th class="toggleable">Followers</th>
+                        <th class="toggleable">Company</th>
+                        <th class="toggleable">Organizations</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +47,13 @@
                 </tbody>
             </table>
         </div>
-        <button id="copyTableButton" style="display: none;">Copy Table</button>
+        <div id="columnToggles" style="display: none;">
+            <!-- Toggles will be added here by JavaScript -->
+        </div>
+        <div class="button-container" style="display: none;">
+            <button id="copyTableButton">Copy Table</button>
+            <button id="resetButton">Reset</button>
+        </div>
         <div id="failedUsernames" style="display: none;">
             <h3>Failed to fetch data for the following usernames:</h3>
             <ul id="failedUsernamesList"></ul>
